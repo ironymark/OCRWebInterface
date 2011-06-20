@@ -55,7 +55,7 @@ public class OCRPages {
                 System.out.println(line);
                 //out.println("<br/>");
                 }
-            //AltoDoc.writeOCR(url, outFacet, pageID);
+            AltoDoc.writeOCR(url, outFacet, pageID);
         } catch (Exception ex) {
             Logger.getLogger(com.diwan.OCRBook.class.getName()).log(Level.SEVERE, null, ex);
         }
