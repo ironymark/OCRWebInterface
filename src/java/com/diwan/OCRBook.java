@@ -72,7 +72,10 @@ public class OCRBook extends HttpServlet {
                     String startEventName = startEvent.getName().getLocalPart();
                     // detect start of a text block
                     if (startEventName.equalsIgnoreCase("url")) {
-                        sourceUrl = reader.getElementText();
+                        //sourceUrl = reader.getElementText(); //this returns http://loghati.amuser-qstpb.com/fedora
+                        sourceUrl = "http://iqra1:8080/fedora"; //when deployed on the Amuser intranet,
+                                                                //the public utl returned above will not work
+                                                                //so we must use this hardcoded one.
                     }
                     if (startEventName.equalsIgnoreCase("ticketId")) {
                         ticketId = reader.getElementText();

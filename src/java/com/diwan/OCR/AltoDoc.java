@@ -9,6 +9,8 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -83,16 +85,19 @@ public class AltoDoc {
             }
 
         } catch (SAXException e) {
+            Logger.getLogger(com.diwan.OCRBook.class.getName()).log(Level.SEVERE, null, e);
             return null;
         } catch (IOException e) {
+            Logger.getLogger(com.diwan.OCRBook.class.getName()).log(Level.SEVERE, null, e);
             return null;
         } catch (ParserConfigurationException e) {
+            Logger.getLogger(com.diwan.OCRBook.class.getName()).log(Level.SEVERE, null, e);
             return null;
         }
         return pageIds;
     }
 
-    public static void writeOCR(String sourceUrl, String sourceFileName, String pageId) {
+    public static void writeOCR(String sourceUrl, String sourceFileName, String pageId, String outputFacet) {
         HttpURLConnection httpCon = null;
         try {
             FileInputStream fis = new FileInputStream(sourceFileName);
@@ -105,7 +110,7 @@ public class AltoDoc {
             }
             outStream.close();
             fis.close();
-            URL outputUrl = new URL(sourceUrl + "/objects/" + pageId + "/datastreams/" + "F_OCR");
+            URL outputUrl = new URL(sourceUrl + "/objects/" + pageId + "/datastreams/" + outputFacet);
             httpCon = (HttpURLConnection) outputUrl.openConnection();
             httpCon.setDoOutput(true);
             httpCon.setUseCaches(false);
@@ -122,7 +127,7 @@ public class AltoDoc {
             System.out.println(httpCon.getResponseMessage());
         }catch (Exception ex) {
             //nothing to do here move along
-            System.out.println(ex.toString());
+            Logger.getLogger(com.diwan.OCRBook.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             if (httpCon != null) {
                 httpCon.disconnect();
@@ -146,7 +151,7 @@ public class AltoDoc {
             in.close();
             imageArray = outStream.toByteArray();
         } catch (Exception ex) {
-            System.err.println(ex.toString());
+            Logger.getLogger(com.diwan.OCRBook.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             if (in != null) {
                 try {
