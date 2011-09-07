@@ -26,7 +26,6 @@ public class OCRThread  extends Thread {
         try {
             OCRPages ocrPgs = new OCRPages();
             System.out.println("OCRPages...");
-            //(String url, String pid, String inFacet, String inLang,  String outFacet)
             ocrPgs.doOCR(outer.sourceUrl, outer.ticketId, outer.inputFacet, outer.inputLang, outer.outputFacet);
         } catch (Exception ex) {
             Logger.getLogger(OCRBook.class.getName()).log(Level.SEVERE, null, ex);

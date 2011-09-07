@@ -110,7 +110,9 @@ public class AltoDoc {
             }
             outStream.close();
             fis.close();
-            URL outputUrl = new URL(sourceUrl + "/objects/" + pageId + "/datastreams/" + outputFacet);
+            //URL outputUrl = new URL(sourceUrl + "/objects/iqra/obj/" + pageId + "/datastreams/" + outputFacet+"/alto?controlGroup=X");
+            URL outputUrl = new URL(sourceUrl + "/objects/iqra/obj/" + pageId + "/datastreams/" + outputFacet+"/alto");
+            System.out.println("url call="+outputUrl.toString());
             httpCon = (HttpURLConnection) outputUrl.openConnection();
             httpCon.setDoOutput(true);
             httpCon.setUseCaches(false);
