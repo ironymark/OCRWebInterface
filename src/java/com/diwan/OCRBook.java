@@ -6,6 +6,7 @@
 package com.diwan;
 
 import java.awt.Image;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
@@ -29,11 +30,10 @@ import javax.xml.stream.events.XMLEvent;
  */
 public class OCRBook extends HttpServlet {
     String ticketId;
-    String inputLang;
-    String outputLang;
-    String sourceUrl;
-    String inputFacet;
-    String outputFacet;
+    String inputLang="en";
+    String sourceUrl ="http://loghati.amuser-qstpb.com/fedora";
+    String inputFacet="F_IMG";
+    String outputFacet="F_OCR";
     Image image = null;
 
     /** 
@@ -54,19 +54,18 @@ public class OCRBook extends HttpServlet {
             out.println("<title>Servlet OCRBook</title>");
             out.println("</head>");
             out.println("<body>");
-
-            String data = request.getParameter("data");
-
             out.println("<img src=http://loghati.amuser-qstpb.com/library/images/logo.png  />");
-            out.println("<h1>Automatic OCR of the book has started. It may take some time</h1>");
-
-
-
+            out.println("<h1>The automatic OCR of the book has started. It may take some time</h1>");
+            out.println("Servlet version 1.23 at 7 Sept using updated url for /alto based on default values.<br/>");
+            String method = request.getMethod();
+            out.println("The method used in the request is " + method +"<br/>");
+            String data = request.getParameter("data");
             StringReader in = new StringReader(data);
+            //BufferedReader in = request.getReader();
+            out.println(data);
             XMLEventReader reader = XMLInputFactory.newInstance().createXMLEventReader(in);
-
             while (reader.hasNext()) {
-                XMLEvent event = (XMLEvent) reader.next();
+                XMLEvent event = (XMLEvent) reader.nextEvent();
                 if (event.getEventType() == XMLEvent.START_ELEMENT) {
                     StartElement startEvent = event.asStartElement();
                     String startEventName = startEvent.getName().getLocalPart();
@@ -74,21 +73,27 @@ public class OCRBook extends HttpServlet {
                     if (startEventName.equalsIgnoreCase("url")) {
                         //sourceUrl = reader.getElementText(); //this returns http://loghati.amuser-qstpb.com/fedora
                         sourceUrl = "http://iqra1:8080/fedora"; //when deployed on the Amuser intranet,
-                                                                //the public utl returned above will not work
+                                                                //the public url returned above will not work
                                                                 //so we must use this hardcoded one.
+                        out.println("url="+sourceUrl+"<br/>");
                     }
                     if (startEventName.equalsIgnoreCase("ticketId")) {
                         ticketId = reader.getElementText();
+                        out.println("ticketId="+ticketId+"<br/>");
                     }
                     if (startEventName.equalsIgnoreCase("inputFacet")) {
-                        inputLang = iterateAttibutes(startEvent, "language").substring(0, 2).toLowerCase();
+                        String il = iterateAttibutes(startEvent, "language");
+                        if(il!=null)
+                            inputLang = il.substring(0, 2).toLowerCase();
+                        //out.println("inputLang="+inputLang+"<br/>");
                         inputFacet = reader.getElementText();
+                        out.println("inputFacet="+inputFacet+"<br/>");
                     }
                     if (startEventName.equalsIgnoreCase("outputFacet")) {
                         outputFacet = reader.getElementText();
+                        out.println("outputFacet="+outputFacet+"<br/>");
                     }
                 }
-
             }
 
             out.println("</body>");
